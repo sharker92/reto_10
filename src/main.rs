@@ -1,59 +1,11 @@
 extern crate piston_window;
-
 use piston_window::*;
-
-impl Grid {
-    /// Draws the grid.
-    pub fn draw<G>(&self, line: &Line, draw_state: &DrawState, transform: Matrix2d, g: &mut G)
-        where G: Graphics
-    {
-        let &Grid { cols, rows, units } = self;
-        for x in 0..cols + 1 {
-            let x1 = x as Scalar * units;
-            let y1 = 0.0;
-            let x2 = x1;
-            let y2 = rows as Scalar * units;
-            line.draw([x1, y1, x2, y2], draw_state, transform, g);
-        }
-        for y in 0..rows + 1 {
-            let x1 = 0.0;
-            let y1 = y as Scalar * units;
-            let x2 = cols as Scalar * units;
-            let y2 = y1;
-            line.draw([x1, y1, x2, y2], draw_state, transform, g);
-        }
-    }
-
-    /// Get a GridIterator for the grid
-    pub fn cells(&self) -> GridCells {
-        GridCells {
-            cols: self.cols,
-            rows: self.rows,
-            state: 0,
-        }
-    }
-
-    /// Get on-screen position of a grid cell
-    pub fn cell_position(&self, cell: (u32, u32)) -> Vec2d {
-        [cell.0 as Scalar * &self.units, cell.1 as Scalar * &self.units]
-    }
-
-    /// Get on-screen x position of a grid cell
-    pub fn x_pos(&self, cell: (u32, u32)) -> Scalar {
-        self.cell_position(cell)[0]
-    }
-
-    /// Get on-screen y position of a grid cell
-    pub fn y_pos(&self, cell: (u32, u32)) -> Scalar {
-        self.cell_position(cell)[1]
-    }
-}
 ///////////////////////////////
-pub struct Grid {
+/*pub struct Grid {
     pub cols: u32,
     pub rows: u32,
-    pub units: i64,
-}
+
+}*/
 struct Punto {
     x: i64,
     y: i64,
@@ -62,7 +14,7 @@ struct Punto {
 }
 
 fn main() {
-    let datos = vec![
+/*    let mut datos = vec![
 Punto { x: 9, y: 1, vx: 0, vy: 2},
 Punto { x: 7, y: 0, vx:-1, vy: 0},
 Punto { x: 3, y:-2, vx:-1, vy: 1},
@@ -93,16 +45,352 @@ Punto { x: 5, y: 0, vx: 1, vy: 0},
 Punto { x:-6, y: 0, vx: 2, vy: 0},
 Punto { x: 5, y: 9, vx: 1, vy:-2},
 Punto { x:14, y: 7, vx:-2, vy: 0},
-Punto { x:-3, y: 6, vx: 2, vy:-1}];
+Punto { x:-3, y: 6, vx: 2, vy:-1}];*/
 
-let mut state =  vec![vec![0; 1000]; 5];//cols rows
+let mut datos = vec![
+Punto { x:-31684, y:-53051, vx: 3, vy: 5},
+Punto { x: 10860, y: 32026, vx:-1, vy:-3},
+Punto { x: 42712, y: 42663, vx:-4, vy:-4},
+Punto { x:-52978, y:-10507, vx: 5, vy: 1},
+Punto { x: 42704, y: 42656, vx:-4, vy:-4},
+Punto { x:-42368, y:-31781, vx: 4, vy: 3},
+Punto { x: 53391, y:-53049, vx:-5, vy: 5},
+Punto { x:-31694, y:-42409, vx: 3, vy: 4},
+Punto { x:-52970, y: 21388, vx: 5, vy:-2},
+Punto { x:-10433, y:-21140, vx: 1, vy: 2},
+Punto { x:-53002, y:-53044, vx: 5, vy: 5},
+Punto { x:-42363, y: 21390, vx: 4, vy:-2},
+Punto { x:-42355, y:-42411, vx: 4, vy: 4},
+Punto { x:-10409, y:-21143, vx: 1, vy: 2},
+Punto { x:-10418, y:-42410, vx: 1, vy: 4},
+Punto { x:-31714, y:-31783, vx: 3, vy: 3},
+Punto { x:-52962, y:-21149, vx: 5, vy: 2},
+Punto { x:-31675, y: 42660, vx: 3, vy:-4},
+Punto { x: 10802, y: 32028, vx:-1, vy:-3},
+Punto { x:-52944, y:-31778, vx: 5, vy: 3},
+Punto { x:-42317, y:-10511, vx: 4, vy: 1},
+Punto { x: 42744, y:-42413, vx:-4, vy: 4},
+Punto { x:-21092, y: 32023, vx: 2, vy:-3},
+Punto { x: 32114, y:-42417, vx:-3, vy: 4},
+Punto { x:-52985, y:-21149, vx: 5, vy: 2},
+Punto { x:-42339, y: 10762, vx: 4, vy:-1},
+Punto { x:-21100, y:-31779, vx: 2, vy: 3},
+Punto { x: 53386, y:-21140, vx:-5, vy: 2},
+Punto { x:-21084, y:-31776, vx: 2, vy: 3},
+Punto { x: 42752, y: 53297, vx:-4, vy:-5},
+Punto { x:-52982, y:-21149, vx: 5, vy: 2},
+Punto { x:-52998, y:-53051, vx: 5, vy: 5},
+Punto { x: 53373, y: 21387, vx:-5, vy:-2},
+Punto { x: 21495, y:-42412, vx:-2, vy: 4},
+Punto { x:-42320, y: 10762, vx: 4, vy:-1},
+Punto { x: 42720, y:-42417, vx:-4, vy: 4},
+Punto { x:-21100, y: 42658, vx: 2, vy:-4},
+Punto { x: 10839, y: 10761, vx:-1, vy:-1},
+Punto { x:-10422, y:-10511, vx: 1, vy: 1},
+Punto { x: 32071, y: 10753, vx:-3, vy:-1},
+Punto { x:-21075, y: 42664, vx: 2, vy:-4},
+Punto { x:-52986, y:-53051, vx: 5, vy: 5},
+Punto { x: 32130, y: 21394, vx:-3, vy:-2},
+Punto { x:-52950, y:-42408, vx: 5, vy: 4},
+Punto { x:-52994, y:-21149, vx: 5, vy: 2},
+Punto { x:-42360, y: 21387, vx: 4, vy:-2},
+Punto { x: 42706, y: 10753, vx:-4, vy:-1},
+Punto { x:-52968, y:-53051, vx: 5, vy: 5},
+Punto { x:-31721, y: 53298, vx: 3, vy:-5},
+Punto { x:-42339, y:-42408, vx: 4, vy: 4},
+Punto { x:-52978, y:-53051, vx: 5, vy: 5},
+Punto { x:-42328, y: 10762, vx: 4, vy:-1},
+Punto { x: 53351, y: 10759, vx:-5, vy:-1},
+Punto { x: 32111, y:-21149, vx:-3, vy: 2},
+Punto { x: 32123, y:-31781, vx:-3, vy: 3},
+Punto { x: 32094, y:-10515, vx:-3, vy: 1},
+Punto { x: 10838, y:-10515, vx:-1, vy: 1},
+Punto { x: 10858, y:-42417, vx:-1, vy: 4},
+Punto { x:-21050, y: 21396, vx: 2, vy:-2},
+Punto { x:-10458, y: 53291, vx: 1, vy:-5},
+Punto { x:-21099, y: 21387, vx: 2, vy:-2},
+Punto { x: 10845, y:-42408, vx:-1, vy: 4},
+Punto { x:-31686, y:-31783, vx: 3, vy: 3},
+Punto { x:-31702, y: 21395, vx: 3, vy:-2},
+Punto { x: 10842, y: 10756, vx:-1, vy:-1},
+Punto { x:-10461, y:-10512, vx: 1, vy: 1},
+Punto { x:-52949, y: 32030, vx: 5, vy:-3},
+Punto { x: 32087, y:-53047, vx:-3, vy: 5},
+Punto { x: 42746, y:-31779, vx:-4, vy: 3},
+Punto { x: 10831, y: 21388, vx:-1, vy:-2},
+Punto { x:-53002, y: 53291, vx: 5, vy:-5},
+Punto { x: 21476, y:-42413, vx:-2, vy: 4},
+Punto { x:-52989, y:-31779, vx: 5, vy: 3},
+Punto { x: 10810, y:-10515, vx:-1, vy: 1},
+Punto { x:-42341, y:-42417, vx: 4, vy: 4},
+Punto { x:-10461, y: 32024, vx: 1, vy:-3},
+Punto { x: 21464, y: 42658, vx:-2, vy:-4},
+Punto { x: 21436, y: 42659, vx:-2, vy:-4},
+Punto { x:-21084, y:-10509, vx: 2, vy: 1},
+Punto { x: 53394, y: 21388, vx:-5, vy:-2},
+Punto { x:-52994, y: 42658, vx: 5, vy:-4},
+Punto { x: 21477, y:-21145, vx:-2, vy: 2},
+Punto { x:-10406, y: 53295, vx: 1, vy:-5},
+Punto { x: 53351, y:-42412, vx:-5, vy: 4},
+Punto { x:-42336, y: 32028, vx: 4, vy:-3},
+Punto { x:-21060, y: 21394, vx: 2, vy:-2},
+Punto { x: 21436, y: 21395, vx:-2, vy:-2},
+Punto { x: 53391, y:-42408, vx:-5, vy: 4},
+Punto { x:-52992, y:-31779, vx: 5, vy: 3},
+Punto { x: 42712, y:-31778, vx:-4, vy: 3},
+Punto { x: 53378, y:-53049, vx:-5, vy: 5},
+Punto { x:-42351, y: 53289, vx: 4, vy:-5},
+Punto { x:-42352, y: 10757, vx: 4, vy:-1},
+Punto { x: 10853, y: 10753, vx:-1, vy:-1},
+Punto { x:-31726, y: 32030, vx: 3, vy:-3},
+Punto { x: 10850, y: 42663, vx:-1, vy:-4},
+Punto { x: 53351, y:-42408, vx:-5, vy: 4},
+Punto { x: 10827, y:-42411, vx:-1, vy: 4},
+Punto { x:-21095, y: 32022, vx: 2, vy:-3},
+Punto { x:-21083, y: 32025, vx: 2, vy:-3},
+Punto { x: 42712, y:-10509, vx:-4, vy: 1},
+Punto { x:-10447, y:-21149, vx: 1, vy: 2},
+Punto { x: 21444, y:-31777, vx:-2, vy: 3},
+Punto { x: 53396, y:-31779, vx:-5, vy: 3},
+Punto { x:-31686, y:-21140, vx: 3, vy: 2},
+Punto { x:-42312, y: 53297, vx: 4, vy:-5},
+Punto { x:-31678, y: 42655, vx: 3, vy:-4},
+Punto { x:-31700, y:-42408, vx: 3, vy: 4},
+Punto { x: 21436, y: 32024, vx:-2, vy:-3},
+Punto { x: 21436, y: 42655, vx:-2, vy:-4},
+Punto { x: 42712, y: 53293, vx:-4, vy:-5},
+Punto { x:-52942, y: 42658, vx: 5, vy:-4},
+Punto { x:-21076, y: 10761, vx: 2, vy:-1},
+Punto { x: 53388, y:-10515, vx:-5, vy: 1},
+Punto { x:-10462, y:-31779, vx: 1, vy: 3},
+Punto { x:-52970, y: 21393, vx: 5, vy:-2},
+Punto { x: 53356, y:-53047, vx:-5, vy: 5},
+Punto { x:-31694, y:-42417, vx: 3, vy: 4},
+Punto { x: 32096, y:-21149, vx:-3, vy: 2},
+Punto { x:-52975, y: 53298, vx: 5, vy:-5},
+Punto { x: 32081, y: 21391, vx:-3, vy:-2},
+Punto { x: 42736, y:-21148, vx:-4, vy: 2},
+Punto { x:-31702, y: 10757, vx: 3, vy:-1},
+Punto { x: 21481, y:-42417, vx:-2, vy: 4},
+Punto { x:-21057, y: 53289, vx: 2, vy:-5},
+Punto { x:-52986, y: 53293, vx: 5, vy:-5},
+Punto { x: 10815, y: 10755, vx:-1, vy:-1},
+Punto { x:-42341, y:-10515, vx: 4, vy: 1},
+Punto { x: 21452, y: 21395, vx:-2, vy:-2},
+Punto { x: 53346, y:-10511, vx:-5, vy: 1},
+Punto { x: 10810, y: 21389, vx:-1, vy:-2},
+Punto { x:-10410, y:-53050, vx: 1, vy: 5},
+Punto { x:-10464, y: 42655, vx: 1, vy:-4},
+Punto { x: 32096, y:-21149, vx:-3, vy: 2},
+Punto { x:-52986, y:-31781, vx: 5, vy: 3},
+Punto { x: 42736, y: 42658, vx:-4, vy:-4},
+Punto { x:-42355, y:-53050, vx: 4, vy: 5},
+Punto { x:-10458, y: 42664, vx: 1, vy:-4},
+Punto { x: 53389, y:-21140, vx:-5, vy: 2},
+Punto { x: 42720, y: 53290, vx:-4, vy:-5},
+Punto { x: 53366, y: 32024, vx:-5, vy:-3},
+Punto { x: 21436, y: 21396, vx:-2, vy:-2},
+Punto { x:-31725, y:-53047, vx: 3, vy: 5},
+Punto { x: 21449, y:-10514, vx:-2, vy: 1},
+Punto { x: 32121, y:-10515, vx:-3, vy: 1},
+Punto { x: 53365, y:-42413, vx:-5, vy: 4},
+Punto { x:-52960, y: 42664, vx: 5, vy:-4},
+Punto { x: 10842, y: 10758, vx:-1, vy:-1},
+Punto { x:-42320, y:-31775, vx: 4, vy: 3},
+Punto { x: 10821, y:-21149, vx:-1, vy: 2},
+Punto { x: 42765, y:-10507, vx:-4, vy: 1},
+Punto { x: 53394, y: 32029, vx:-5, vy:-3},
+Punto { x:-42360, y: 10759, vx: 4, vy:-1},
+Punto { x:-21096, y: 21387, vx: 2, vy:-2},
+Punto { x: 10859, y:-53049, vx:-1, vy: 5},
+Punto { x:-21044, y:-53050, vx: 2, vy: 5},
+Punto { x:-10434, y:-53049, vx: 1, vy: 5},
+Punto { x:-10434, y:-21147, vx: 1, vy: 2},
+Punto { x: 21461, y: 32021, vx:-2, vy:-3},
+Punto { x: 42733, y:-10515, vx:-4, vy: 1},
+Punto { x: 10858, y:-53043, vx:-1, vy: 5},
+Punto { x:-42324, y: 32021, vx: 4, vy:-3},
+Punto { x: 10835, y: 21396, vx:-1, vy:-2},
+Punto { x: 21468, y:-31778, vx:-2, vy: 3},
+Punto { x: 10815, y: 42660, vx:-1, vy:-4},
+Punto { x:-21057, y: 10757, vx: 2, vy:-1},
+Punto { x:-42334, y:-42408, vx: 4, vy: 4},
+Punto { x: 21464, y:-21146, vx:-2, vy: 2},
+Punto { x:-53002, y: 10760, vx: 5, vy:-1},
+Punto { x:-31706, y:-10515, vx: 3, vy: 1},
+Punto { x: 53391, y:-53051, vx:-5, vy: 5},
+Punto { x: 21476, y:-42410, vx:-2, vy: 4},
+Punto { x: 10855, y:-42415, vx:-1, vy: 4},
+Punto { x:-42319, y:-42408, vx: 4, vy: 4},
+Punto { x:-42360, y: 32024, vx: 4, vy:-3},
+Punto { x: 10847, y: 53298, vx:-1, vy:-5},
+Punto { x: 42763, y:-42413, vx:-4, vy: 4},
+Punto { x: 42712, y:-31776, vx:-4, vy: 3},
+Punto { x: 42708, y: 21391, vx:-4, vy:-2},
+Punto { x: 32083, y: 42655, vx:-3, vy:-4},
+Punto { x: 53398, y: 53295, vx:-5, vy:-5},
+Punto { x: 21452, y:-31782, vx:-2, vy: 3},
+Punto { x:-10466, y:-31782, vx: 1, vy: 3},
+Punto { x: 10861, y:-10510, vx:-1, vy: 1},
+Punto { x:-10461, y: 53291, vx: 1, vy:-5},
+Punto { x:-10418, y:-53051, vx: 1, vy: 5},
+Punto { x: 21476, y: 10757, vx:-2, vy:-1},
+Punto { x: 32086, y:-53043, vx:-3, vy: 5},
+Punto { x:-31705, y: 42655, vx: 3, vy:-4},
+Punto { x:-42335, y:-21140, vx: 4, vy: 2},
+Punto { x:-42360, y:-53046, vx: 4, vy: 5},
+Punto { x: 10845, y: 42664, vx:-1, vy:-4},
+Punto { x:-42308, y: 10759, vx: 4, vy:-1},
+Punto { x: 21487, y:-53051, vx:-2, vy: 5},
+Punto { x: 42764, y: 42658, vx:-4, vy:-4},
+Punto { x:-52989, y:-21146, vx: 5, vy: 2},
+Punto { x: 53351, y:-21142, vx:-5, vy: 2},
+Punto { x: 21436, y:-42411, vx:-2, vy: 4},
+Punto { x:-42360, y:-31782, vx: 4, vy: 3},
+Punto { x:-42365, y: 21391, vx: 4, vy:-2},
+Punto { x:-31684, y: 53298, vx: 3, vy:-5},
+Punto { x: 10838, y:-10506, vx:-1, vy: 1},
+Punto { x: 21444, y:-31778, vx:-2, vy: 3},
+Punto { x:-42368, y: 53291, vx: 4, vy:-5},
+Punto { x: 10802, y: 42661, vx:-1, vy:-4},
+Punto { x:-42344, y:-42410, vx: 4, vy: 4},
+Punto { x:-31689, y: 10753, vx: 3, vy:-1},
+Punto { x: 53399, y: 32022, vx:-5, vy:-3},
+Punto { x: 21462, y: 21387, vx:-2, vy:-2},
+Punto { x:-53002, y:-31780, vx: 5, vy: 3},
+Punto { x: 10829, y: 21396, vx:-1, vy:-2},
+Punto { x: 32104, y: 21396, vx:-3, vy:-2},
+Punto { x: 32120, y:-42408, vx:-3, vy: 4},
+Punto { x:-10458, y:-31780, vx: 1, vy: 3},
+Punto { x:-21100, y: 21393, vx: 2, vy:-2},
+Punto { x: 42765, y:-42409, vx:-4, vy: 4},
+Punto { x: 21465, y:-42408, vx:-2, vy: 4},
+Punto { x:-10462, y: 21387, vx: 1, vy:-2},
+Punto { x:-31684, y:-10510, vx: 3, vy: 1},
+Punto { x: 10802, y:-21145, vx:-1, vy: 2},
+Punto { x: 53399, y: 32030, vx:-5, vy:-3},
+Punto { x:-21060, y: 42657, vx: 2, vy:-4},
+Punto { x:-52986, y:-31781, vx: 5, vy: 3},
+Punto { x: 42705, y: 32025, vx:-4, vy:-3},
+Punto { x:-31677, y:-10513, vx: 3, vy: 1},
+Punto { x:-52962, y:-42409, vx: 5, vy: 4},
+Punto { x: 53367, y: 21389, vx:-5, vy:-2},
+Punto { x: 10863, y: 53289, vx:-1, vy:-5},
+Punto { x: 32110, y:-53045, vx:-3, vy: 5},
+Punto { x:-10458, y:-31774, vx: 1, vy: 3},
+Punto { x: 21494, y:-31778, vx:-2, vy: 3},
+Punto { x:-52958, y: 42664, vx: 5, vy:-4},
+Punto { x:-21087, y:-21141, vx: 2, vy: 2},
+Punto { x:-10450, y: 32024, vx: 1, vy:-3},
+Punto { x: 32098, y:-21140, vx:-3, vy: 2},
+Punto { x:-52941, y:-53043, vx: 5, vy: 5},
+Punto { x:-42328, y: 53294, vx: 4, vy:-5},
+Punto { x: 53378, y:-21148, vx:-5, vy: 2},
+Punto { x: 32128, y: 42659, vx:-3, vy:-4},
+Punto { x:-42342, y: 42664, vx: 4, vy:-4},
+Punto { x:-10422, y:-31779, vx: 1, vy: 3},
+Punto { x:-31702, y: 42662, vx: 3, vy:-4},
+Punto { x: 21449, y: 32023, vx:-2, vy:-3},
+Punto { x: 10862, y: 10755, vx:-1, vy:-1},
+Punto { x: 53340, y:-53047, vx:-5, vy: 5},
+Punto { x: 21439, y:-10511, vx:-2, vy: 1},
+Punto { x: 53387, y: 32027, vx:-5, vy:-3},
+Punto { x:-31707, y:-42408, vx: 3, vy: 4},
+Punto { x: 42736, y: 21392, vx:-4, vy:-2},
+Punto { x:-31690, y:-10515, vx: 3, vy: 1},
+Punto { x:-21048, y:-53051, vx: 2, vy: 5},
+Punto { x: 10818, y: 32021, vx:-1, vy:-3},
+Punto { x: 32103, y: 10753, vx:-3, vy:-1},
+Punto { x: 21492, y: 53289, vx:-2, vy:-5},
+Punto { x: 32086, y: 21395, vx:-3, vy:-2},
+Punto { x:-21082, y:-10511, vx: 2, vy: 1},
+Punto { x:-42315, y:-21140, vx: 4, vy: 2},
+Punto { x:-31724, y:-10511, vx: 3, vy: 1},
+Punto { x: 10826, y: 32028, vx:-1, vy:-3},
+Punto { x:-52990, y: 10757, vx: 5, vy:-1},
+Punto { x: 42757, y: 53290, vx:-4, vy:-5},
+Punto { x:-42307, y: 42656, vx: 4, vy:-4},
+Punto { x:-10449, y:-53051, vx: 1, vy: 5},
+Punto { x:-10466, y: 10758, vx: 1, vy:-1},
+Punto { x:-31708, y:-10510, vx: 3, vy: 1},
+Punto { x:-42363, y:-21147, vx: 4, vy: 2},
+Punto { x: 53365, y:-31779, vx:-5, vy: 3},
+Punto { x: 32070, y: 42660, vx:-3, vy:-4},
+Punto { x: 21493, y:-10512, vx:-2, vy: 1},
+Punto { x: 21455, y:-42413, vx:-2, vy: 4},
+Punto { x:-21065, y: 21396, vx: 2, vy:-2},
+Punto { x: 10810, y: 21394, vx:-1, vy:-2},
+Punto { x: 53351, y:-10510, vx:-5, vy: 1},
+Punto { x: 21488, y:-42414, vx:-2, vy: 4},
+Punto { x: 42764, y: 53296, vx:-4, vy:-5},
+Punto { x: 42725, y:-42417, vx:-4, vy: 4},
+Punto { x: 53366, y: 42655, vx:-5, vy:-4},
+Punto { x: 32082, y: 42659, vx:-3, vy:-4},
+Punto { x: 53354, y: 10757, vx:-5, vy:-1},
+Punto { x: 32086, y: 21396, vx:-3, vy:-2},
+Punto { x:-52994, y: 32025, vx: 5, vy:-3},
+Punto { x:-42319, y:-31774, vx: 4, vy: 3},
+Punto { x:-42360, y: 32028, vx: 4, vy:-3},
+Punto { x:-42368, y:-21144, vx: 4, vy: 2},
+Punto { x: 21493, y:-42410, vx:-2, vy: 4},
+Punto { x:-31700, y: 10753, vx: 3, vy:-1},
+Punto { x: 42729, y:-10506, vx:-4, vy: 1},
+Punto { x: 21468, y:-21142, vx:-2, vy: 2},
+Punto { x: 32131, y:-31774, vx:-3, vy: 3},
+Punto { x: 32102, y: 10758, vx:-3, vy:-1},
+Punto { x: 32126, y:-42408, vx:-3, vy: 4},
+Punto { x:-31682, y:-31780, vx: 3, vy: 3},
+Punto { x: 21452, y: 32022, vx:-2, vy:-3},
+Punto { x:-42335, y:-42417, vx: 4, vy: 4},
+Punto { x:-10409, y: 32027, vx: 1, vy:-3},
+Punto { x: 53382, y:-10511, vx:-5, vy: 1},
+Punto { x:-21059, y:-21140, vx: 2, vy: 2},
+Punto { x:-31684, y:-21144, vx: 3, vy: 2},
+Punto { x:-31709, y:-10515, vx: 3, vy: 1},
+Punto { x: 32119, y:-53051, vx:-3, vy: 5},
+Punto { x: 21449, y: 21393, vx:-2, vy:-2},
+Punto { x: 10826, y: 32030, vx:-1, vy:-3},
+Punto { x:-21074, y:-42408, vx: 2, vy: 4},
+Punto { x: 10814, y: 53293, vx:-1, vy:-5},
+Punto { x:-42352, y: 10759, vx: 4, vy:-1},
+Punto { x: 10822, y:-10515, vx:-1, vy: 1},
+Punto { x: 32110, y:-31780, vx:-3, vy: 3},
+Punto { x:-10450, y:-53045, vx: 1, vy: 5},
+Punto { x: 32115, y: 21387, vx:-3, vy:-2},
+Punto { x: 42723, y: 42659, vx:-4, vy:-4},
+Punto { x:-52989, y:-21149, vx: 5, vy: 2},
+Punto { x: 42720, y: 21392, vx:-4, vy:-2},
+Punto { x:-31716, y:-10515, vx: 3, vy: 1},
+Punto { x:-21075, y: 10762, vx: 2, vy:-1},
+Punto { x:-52953, y: 21393, vx: 5, vy:-2},
+Punto { x:-52997, y:-31782, vx: 5, vy: 3},
+Punto { x:-21075, y: 53295, vx: 2, vy:-5},
+Punto { x: 42707, y: 42655, vx:-4, vy:-4},
+Punto { x:-52986, y: 21389, vx: 5, vy:-2},
+Punto { x:-10437, y:-10515, vx: 1, vy: 1},
+Punto { x:-52961, y:-10506, vx: 5, vy: 1},
+Punto { x:-21040, y: 10755, vx: 2, vy:-1},
+Punto { x: 21493, y: 42657, vx:-2, vy:-4},
+Punto { x:-31685, y:-53042, vx: 3, vy: 5},
+Punto { x: 10844, y:-53051, vx:-1, vy: 5},
+Punto { x: 53378, y:-42411, vx:-5, vy: 4},
+Punto { x:-31731, y:-21149, vx: 3, vy: 2},
+Punto { x:-52989, y: 10757, vx: 5, vy:-1},
+Punto { x: 21468, y:-42414, vx:-2, vy: 4},
+Punto { x:-31694, y: 32022, vx: 3, vy:-3},
+Punto { x:-10425, y:-53047, vx: 1, vy: 5},
+Punto { x: 10839, y: 10754, vx:-1, vy:-1},
+Punto { x:-31721, y: 53297, vx: 3, vy:-5},
+Punto { x: 21456, y: 53293, vx:-2, vy:-5}];
+
+//let mut state =  vec![vec![0; 1000]; 5];//cols rows
 //state[0][1] = 42;
-    let malla = Grid{ cols: 10, rows: 5, units: 1};
+//    let malla = Grid{ cols: 10, rows: 5};
 
     //let origin = Punto { x: 0, y: 0 }; // origin: Point
 
     //println!("The origin is at ({}, {})", origin.x, origin.y);
-    println!("El punto 2 is at ({}, {}, {}, {})", datos[1].x, datos[1].y, datos[1].vx, datos[1].vy);
+//    println!("El punto 2 is at ({}, {}, {}, {})", datos[1].x, datos[1].y, datos[1].vx, datos[1].vy);
     //malla.draw();
     //println!("{}", malla);
 /*    for cols in state.iter(){
@@ -111,16 +399,51 @@ let mut state =  vec![vec![0; 1000]; 5];//cols rows
         }
         println!();
     }*/
-    let mut window: PistonWindow =
-        WindowSettings::new("Advent Code 10!", [640, 480])
-        .exit_on_esc(true).build().unwrap();
+//    delay(10000);
+    let mut contador_tiempo = 0;
+    let mut window: PistonWindow = WindowSettings::new("Advent Code 10!", [1600, 900]).exit_on_esc(true).build().unwrap();
+
     while let Some(event) = window.next() {
+        if let Some(Button::Keyboard(Key::A)) = event.press_args() {
+            for m in 0..datos.len(){
+                datos[m].x += datos[m].vx;
+                datos[m].y += datos[m].vy;
+                //println!("Key event: {:?} {:?}", Key::A, event.press_args());
+            }
+            contador_tiempo += 1;
+            println!("{}", contador_tiempo);
+        }
+        /*if let Event::Input(input) = &event {
+            if let Input::Button(button_args) = input {
+                if let Button::Keyboard(key) = button_args.button {
+                    // Hold down a key, and see the message repeated in your terminal.
+                    println!("Key event: {:?} {:?}", key, button_args.state);
+                    for m in 0..datos.len(){
+                        datos[m].x += datos[m].vx;
+                        datos[m].y += datos[m].vy;
+                    }
+                }
+            }
+        }*/
+
+
         window.draw_2d(&event, |context, graphics| {
             clear([1.0; 4], graphics);
-            rectangle([1.0, 0.0, 0.0, 1.0], // red
-                      [0.0, 0.0, 100.0, 100.0],
-                      context.transform,
-                      graphics);
+            let center = context.transform.trans(800.0, 450.0);
+            let black = [0.0, 0.0, 0.0, 1.0];
+            for a in 0..datos.len(){
+                let mut x = datos[a].x as f64;
+                let mut y = datos[a].y as f64;
+                let square = rectangle::square(x, y, 1.0);
+            rectangle(black, square, center, graphics);
+            }
         });
+
     }
 }
+/*
+fn delay(millis: u64) -}, Delay {
+    Delay::new(
+        Instant::now() + Duration::from_millis(millis),
+    )
+}*/
