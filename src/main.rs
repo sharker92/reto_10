@@ -1,11 +1,6 @@
 extern crate piston_window;
 use piston_window::*;
-///////////////////////////////
-/*pub struct Grid {
-    pub cols: u32,
-    pub rows: u32,
 
-}*/
 struct Punto {
     x: i64,
     y: i64,
@@ -383,50 +378,20 @@ Punto { x: 10839, y: 10754, vx:-1, vy:-1},
 Punto { x:-31721, y: 53297, vx: 3, vy:-5},
 Punto { x: 21456, y: 53293, vx:-2, vy:-5}];
 
-//let mut state =  vec![vec![0; 1000]; 5];//cols rows
-//state[0][1] = 42;
-//    let malla = Grid{ cols: 10, rows: 5};
-
-    //let origin = Punto { x: 0, y: 0 }; // origin: Point
-
-    //println!("The origin is at ({}, {})", origin.x, origin.y);
-//    println!("El punto 2 is at ({}, {}, {}, {})", datos[1].x, datos[1].y, datos[1].vx, datos[1].vy);
-    //malla.draw();
-    //println!("{}", malla);
-/*    for cols in state.iter(){
-        for rows in cols.iter(){
-            print!("{}", rows);
-        }
-        println!();
-    }*/
-//    delay(10000);
     let mut contador_tiempo = 0;
     let mut window: PistonWindow = WindowSettings::new("Advent Code 10!", [1600, 900]).exit_on_esc(true).build().unwrap();
 
     while let Some(event) = window.next() {
+        //registro de evento al precionar tecla A y contador de avance
         if let Some(Button::Keyboard(Key::A)) = event.press_args() {
             for m in 0..datos.len(){
                 datos[m].x += datos[m].vx;
                 datos[m].y += datos[m].vy;
-                //println!("Key event: {:?} {:?}", Key::A, event.press_args());
             }
             contador_tiempo += 1;
             println!("{}", contador_tiempo);
         }
-        /*if let Event::Input(input) = &event {
-            if let Input::Button(button_args) = input {
-                if let Button::Keyboard(key) = button_args.button {
-                    // Hold down a key, and see the message repeated in your terminal.
-                    println!("Key event: {:?} {:?}", key, button_args.state);
-                    for m in 0..datos.len(){
-                        datos[m].x += datos[m].vx;
-                        datos[m].y += datos[m].vy;
-                    }
-                }
-            }
-        }*/
-
-
+        //despliegue de pantalla y cuadros
         window.draw_2d(&event, |context, graphics| {
             clear([1.0; 4], graphics);
             let center = context.transform.trans(800.0, 450.0);
@@ -441,9 +406,3 @@ Punto { x: 21456, y: 53293, vx:-2, vy:-5}];
 
     }
 }
-/*
-fn delay(millis: u64) -}, Delay {
-    Delay::new(
-        Instant::now() + Duration::from_millis(millis),
-    )
-}*/
